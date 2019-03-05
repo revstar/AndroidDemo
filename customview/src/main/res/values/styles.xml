@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="autoCompleteTextViewStyle">@style/BlueTextStyle</item>
+        <item name="android:textColor">@android:color/holo_purple</item>
+        <item name="myTextViewStyle">@style/MyTextStyle</item>
+    </style>
+    <style name="MyViewTheme">
+      <item name="android:textViewStyle">@style/BlueTextStyle</item>
+        <item name="android:textColor">@android:color/holo_purple</item>
+    </style>
+
+    <style name="BlueTextStyle">
+        <item name="android:textColor">@android:color/holo_blue_light</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <style name="ReadTextStyle">
+        <item name="android:textColor">@android:color/holo_red_light</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+
+    <style name="OrangeTextStyle">
+        <item name="android:textColor">@android:color/holo_orange_light</item>
+    </style>
+
+    <style name="GreenTextStyle">
+        <item name="android:textColor">@android:color/holo_green_light</item>
+    </style>
+
+    <style name="BlankTextStyle">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    <style name="MyTextStyle">
+        <item name="android:textColor">@android:color/holo_red_dark</item>
+        <item name="android:background">@android:color/holo_blue_light</item>
+    </style>
+</resources>
