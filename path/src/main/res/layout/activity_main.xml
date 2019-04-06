@@ -5,8 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-<com.opencv.path.PathView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/ig_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/ic_blank_board"
+        android:visibility="gone" />
+
+    <com.opencv.path.PathView
+        android:id="@+id/path_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

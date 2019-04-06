@@ -1,1 +1,1 @@
-include ':app', ':customview', ':path'
+include ':app', ':customview', ':path', ':cutout', ':cutout', ':dashpath'

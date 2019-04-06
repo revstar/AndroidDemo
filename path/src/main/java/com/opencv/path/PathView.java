@@ -1,10 +1,14 @@
 package com.opencv.path;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -21,12 +25,39 @@ import androidx.annotation.Nullable;
  */
 public class PathView extends View {
 
+    /**
+     * 圈选的画笔
+     */
     Paint mPaint;
+    /**
+     * 圈选路径
+     */
     Path mPath;
 
+    /**
+     * 触摸点的坐标
+     */
     private float eventX,eventY;
+    /**
+     * 原始照片图片
+     */
+    private Bitmap mPhotoBitmap;
+
+    /**
+     * 裁剪的照片
+     */
+    private Bitmap mCutImvBmp;
+    /**
+     *  贝塞尔曲线区域
+     */
+    RectF quadPathRectF;
+    /**
+     * 抠出来的图
+     */
+    Bitmap mCutOutBmp;
     private int endX,endY;
 
+    private boolean mCutFinFlag = false;
 
     public PathView(Context context) {
         super(context);
@@ -45,12 +76,20 @@ public class PathView extends View {
 
     }
 
+    public void setPhotoBitmap(Bitmap photoBitmap){
+        if (photoBitmap==null){
+            return;
+        }
+        mPhotoBitmap=photoBitmap;
+    }
+
     public void init() {
         mPaint = new Paint();
+        PorterDuffXfermode xfermode=new PorterDuffXfermode(PorterDuff.Mode.DST_IN );
+//        mPaint.setXfermode(xfermode);
         mPaint.setTextSize(100);
         mPaint.setColor(Color.RED);
         mPaint.setStyle(Paint.Style.STROKE);
-
         mPath = new Path();
 
     }
@@ -58,32 +97,13 @@ public class PathView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (mPhotoBitmap==null){
+            return;
+        }
 
-        //直线
-//        mPath.moveTo(100,200);
-//        mPath.lineTo(200,200);
-//        mPath.lineTo(300,400);
-//        mPath.lineTo(0,400);
-////        mPath.close();
-//        canvas.drawPath(mPath,mPaint);
-        //
-//        RectF rectF=new RectF(100,200,400,400);
-//        mPath.addRect(rectF,Path.Direction.CCW);
-//
-//        canvas.drawPath(mPath,mPaint);
-//
-//        RectF rectF1=new RectF(500,200,800,400);
-//        mPath.addRect(rectF1,Path.Direction.CW);
-//
-//        canvas.drawPath(mPath,mPaint);
-
-//        mPath.moveTo(100, 300);
-//        mPath.quadTo(200, 200, 300, 300);
-////        mPath.quadTo(400,400,500,300);
-//        canvas.drawPath(mPath, mPaint);
-//        mPath.close();
-
-        canvas.drawPath(mPath,mPaint);
+        mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(mPhotoBitmap,0,0,mPaint);
+        canvas.drawCircle(30,30,50,mPaint);
     }
 
     @Override
@@ -91,6 +111,7 @@ public class PathView extends View {
         super.onTouchEvent(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mPaint.setStyle(Paint.Style.STROKE);
                 eventX=event.getX();
                 eventY=event.getY();
                 mPath.moveTo(eventX,eventY);
@@ -105,8 +126,25 @@ public class PathView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 mPath.close();
+                mCutFinFlag=true;
                 break;
 
+
+        }
+        if (mCutFinFlag){
+
+            quadPathRectF = new RectF();
+            mPath.computeBounds(  quadPathRectF,   false);
+            mPaint.setStyle(Paint.Style.FILL);
+            Canvas mCanvas=new Canvas();
+            mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            mCanvas.drawPath(  mPath,   mPaint);
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
+            mCanvas.drawBitmap(  mPhotoBitmap, 0.0f, 0.0f,   mPaint);
+            mCutOutBmp = Bitmap.createBitmap((int)   quadPathRectF.width(), (int)   quadPathRectF.height(),   mPhotoBitmap.getConfig());
+            Canvas mCanvasCut = new Canvas(  mCutOutBmp);
+//                        mCanvasCut.drawColor(0, Mode.CLEAR);
+            mCanvasCut.drawBitmap(  mCutOutBmp, new Rect((int)   quadPathRectF.left, (int)   quadPathRectF.top, ((int)   quadPathRectF.left) + ((int)   quadPathRectF.width()), ((int)   quadPathRectF.top) + ((int)   quadPathRectF.height())), new RectF(0.0f, 0.0f, (float)   mCutOutBmp.getWidth(), (float)   mCutOutBmp.getHeight()), null);
         }
         invalidate();
         return true;
