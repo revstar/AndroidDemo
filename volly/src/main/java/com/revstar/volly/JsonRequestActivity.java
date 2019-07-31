@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -29,7 +30,7 @@ public class JsonRequestActivity extends AppCompatActivity {
     TextView tvIp;
     ImageView igPhoto;
     RequestQueue mQueue;
-    ImageView netWorkImageView;
+    NetworkImageView netWorkImageView;
 
 
     @Override
@@ -48,10 +49,31 @@ public class JsonRequestActivity extends AppCompatActivity {
                 getIp();
 //                imageRequest();
                 imageLoader();
+                netWorkImage();
 
             }
         }).start();
 
+    }
+
+    private void netWorkImage() {
+        if (mQueue==null){
+            mQueue=Volley.newRequestQueue(getApplicationContext());
+            ImageLoader imageLoader=new ImageLoader(mQueue, new ImageLoader.ImageCache() {
+                @Override
+                public Bitmap getBitmap(String url) {
+                    return null;
+                }
+
+                @Override
+                public void putBitmap(String url, Bitmap bitmap) {
+
+                }
+            });
+            netWorkImageView.setDefaultImageResId(R.drawable.ic_launcher_background);
+            netWorkImageView.setErrorImageResId(R.drawable.ic_launcher_background);
+            netWorkImageView.setImageUrl("https://ww1.sinaimg.cn/large/0073sXn7gy1g37vxr8675j30u01hcdlc",imageLoader);
+        }
     }
 
     public void getIp() {
