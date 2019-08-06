@@ -1,1 +1,1 @@
-include ':app', ':customview', ':path', ':cutout', ':cutout', ':dashpath', ':volly', ':dispatchevent', ':dragview'
+include ':app', ':customview', ':path', ':cutout', ':cutout', ':dashpath', ':volly', ':dispatchevent', ':dragview', ':clipview'

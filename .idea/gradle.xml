@@ -9,10 +9,14 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/clipview" />
             <option value="$PROJECT_DIR$/customview" />
             <option value="$PROJECT_DIR$/cutout" />
             <option value="$PROJECT_DIR$/dashpath" />
+            <option value="$PROJECT_DIR$/dispatchevent" />
+            <option value="$PROJECT_DIR$/dragview" />
             <option value="$PROJECT_DIR$/path" />
+            <option value="$PROJECT_DIR$/volly" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
