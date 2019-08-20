@@ -8,7 +8,7 @@
 
  <ImageView
      android:layout_width="300dp"
-     android:layout_height="600dp"
+     android:layout_height="300dp"
      android:background="@drawable/dressing_camera_bg"
      android:layout_gravity="center"/>
 </FrameLayout>
