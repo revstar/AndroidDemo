@@ -1,4 +1,4 @@
-package com.revstar.urlparser;
+package com.revstar.urlparser.adapter;
 
 import android.app.Activity;
 import android.widget.ImageView;
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.revstar.urlparser.R;
 
 import java.util.List;
 

@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.revstar.urlparser.adapter.ResultAdapter;
+
 import java.util.ArrayList;
 
 public class ParserResultActivity extends AppCompatActivity {
