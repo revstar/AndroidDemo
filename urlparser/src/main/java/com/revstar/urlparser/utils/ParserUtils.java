@@ -11,7 +11,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Create on 2019/8/22 15:04
@@ -26,8 +29,8 @@ public class ParserUtils {
      * @param html
      * @return
      */
-    public static List<String> parserTMUrl(String html) {
-        List<String> urlList = new ArrayList<>();
+    public static ArrayList<String> parserTMUrl(String html) {
+        ArrayList<String> urlList = new ArrayList<>();
         Document doc = Jsoup.parse(html);
 
         Elements src = doc.select("a.item");

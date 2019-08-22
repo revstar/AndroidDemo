@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -72,7 +73,7 @@ public class BrowserActivity extends Activity {
     private Button mGo;
     private EditText mUrl;
 
-    private static final String mHomeUrl = "http://app.html5.qq.com/navi/index";
+    private static final String mHomeUrl = "https://product.suning.com/0070801979/11314450995.html?safp=d488778a.list.0.a0cab3caa1&safc=prd.0.0";
     private static final String TAG = "SdkDemo";
     private static final int MAX_LENGTH = 14;
     private boolean mNeedTestPage = false;
@@ -154,15 +155,54 @@ public class BrowserActivity extends Activity {
                 .getDrawable(R.drawable.color_progressbar));
     }
 
+
     private void init() {
 
+
         mWebView = new X5WebView(this, null);
+
 
         mViewParent.addView(mWebView, new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.FILL_PARENT,
                 FrameLayout.LayoutParams.FILL_PARENT));
 
         initProgressBar();
+
+        WebSettings webSetting = mWebView.getSettings();
+        webSetting.setAllowFileAccess(true);
+        webSetting.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
+        webSetting.setSupportZoom(true);
+        webSetting.setBuiltInZoomControls(true);
+        webSetting.setUseWideViewPort(true);
+        webSetting.setSupportMultipleWindows(false);
+        // webSetting.setLoadWithOverviewMode(true);
+        webSetting.setAppCacheEnabled(true);
+        // webSetting.setDatabaseEnabled(true);
+        webSetting.setDomStorageEnabled(true);
+        webSetting.setJavaScriptEnabled(true);
+        webSetting.setGeolocationEnabled(true);
+        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
+        webSetting.setAppCachePath(this.getDir("appcache", 0).getPath());
+        webSetting.setDatabasePath(this.getDir("databases", 0).getPath());
+        webSetting.setGeolocationDatabasePath(this.getDir("geolocation", 0)
+                .getPath());
+        // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
+        webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
+        // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
+        // webSetting.setPreFectch(true);
+        mWebView.addJavascriptInterface(new InJavaScriptLocalObj(), "local_obj");
+
+        long time = System.currentTimeMillis();
+        if (mIntentUrl == null) {
+            mWebView.loadUrl(mHomeUrl);
+        } else {
+            mWebView.loadUrl(mIntentUrl.toString());
+        }
+        TbsLog.d("time-cost", "cost time: "
+                + (System.currentTimeMillis() - time));
+        CookieSyncManager.createInstance(this);
+        CookieSyncManager.getInstance().sync();
+
 
         mWebView.setWebViewClient(new WebViewClient() {
 
@@ -188,38 +228,15 @@ public class BrowserActivity extends Activity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+                view.loadUrl("javascript:window.java_obj.showSource("
+                        + "document.getElementsByTagName('html')[0].innerHTML);");
                 super.onPageFinished(view, url);
-                // mTestHandler.sendEmptyMessage(MSG_OPEN_TEST_URL);
                 mTestHandler.sendEmptyMessageDelayed(MSG_OPEN_TEST_URL, 5000);// 5s?
                 if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
                     changGoForwardButton(view);
-                Toast.makeText(BrowserActivity.this, "页面加载完成", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(BrowserActivity.this, "页面加载完成", Toast.LENGTH_SHORT).show();
                 /* mWebView.showLog("test Log"); */
 
-//                       new Thread(new Runnable() {
-//           @Override
-//           public void run() {
-//               try {
-//                   Document doc= Jsoup.connect("https://product.suning.com/0070801979/11314450995.html?safp=d488778a.list.0.a0cab3caa1&safc=prd.0.0").get();
-//                   Elements src=doc.select("img[src]");
-//                   for (Element element:src){
-//                       Attributes node=element.attributes();
-//                       Iterator<Attribute> iterator=node.iterator();
-//                       while (iterator.hasNext()){
-//                           Attribute attribute=iterator.next();
-//                           String key=attribute.getKey();
-//                           if (key.equals("src")){
-//                               String otherSrc=attribute.getValue();
-//                               Log.d(BrowserActivity.this.getLocalClassName()+">>>>>>图片地址:",otherSrc);
-//                           }
-//                       }
-//                   }
-//               } catch (IOException e) {
-//                   e.printStackTrace();
-//                   Toast.makeText(BrowserActivity.this,"解析错误:"+e.getMessage(),Toast.LENGTH_SHORT).show();
-//               }
-//           }
-//       }).start();
 
             }
 
@@ -228,6 +245,8 @@ public class BrowserActivity extends Activity {
                 super.onReceivedSslError(webView, sslErrorHandler, sslError);
             }
         });
+
+
 
         mWebView.setWebChromeClient(new WebChromeClient() {
 
@@ -339,39 +358,19 @@ public class BrowserActivity extends Activity {
                                 }).show();
             }
         });
+    }
 
-        WebSettings webSetting = mWebView.getSettings();
-        webSetting.setAllowFileAccess(true);
-        webSetting.setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);
-        webSetting.setSupportZoom(true);
-        webSetting.setBuiltInZoomControls(true);
-        webSetting.setUseWideViewPort(true);
-        webSetting.setSupportMultipleWindows(false);
-        // webSetting.setLoadWithOverviewMode(true);
-        webSetting.setAppCacheEnabled(true);
-        // webSetting.setDatabaseEnabled(true);
-        webSetting.setDomStorageEnabled(true);
-        webSetting.setJavaScriptEnabled(true);
-        webSetting.setGeolocationEnabled(true);
-        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
-        webSetting.setAppCachePath(this.getDir("appcache", 0).getPath());
-        webSetting.setDatabasePath(this.getDir("databases", 0).getPath());
-        webSetting.setGeolocationDatabasePath(this.getDir("geolocation", 0)
-                .getPath());
-        // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
-        webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        // webSetting.setPreFectch(true);
-        long time = System.currentTimeMillis();
-        if (mIntentUrl == null) {
-            mWebView.loadUrl(mHomeUrl);
-        } else {
-            mWebView.loadUrl(mIntentUrl.toString());
+    public final class InJavaScriptLocalObj
+    {
+        @JavascriptInterface
+        public void showSource(String html) {
+            System.out.println("====>html=" + html);
         }
-        TbsLog.d("time-cost", "cost time: "
-                + (System.currentTimeMillis() - time));
-        CookieSyncManager.createInstance(this);
-        CookieSyncManager.getInstance().sync();
+
+        @JavascriptInterface
+        public void showDescription(String str) {
+            System.out.println("====>html=" + str);
+        }
     }
 
     private void initBtnListenser() {
