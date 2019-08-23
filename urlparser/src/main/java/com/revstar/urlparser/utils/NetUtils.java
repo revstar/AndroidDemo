@@ -35,8 +35,17 @@ public class NetUtils {
      * @param url
      * @return
      */
-    public static boolean isTaobaoUrl(String url) {
-        return (url != null && url.contains("taobao.com"));
+    public static boolean isMTaobaoUrl(String url) {
+        return (url != null && url.contains("m.taobao.com"));
+    }
+
+    /**
+     * 聚划算
+     * @param url
+     * @return
+     */
+  public static boolean isJUTaobaoUrl(String url) {
+        return (url != null && url.contains("ju.taobao.com"));
     }
 
     /**
@@ -78,6 +87,35 @@ public class NetUtils {
     public static boolean isVIPUrl(String ur) {
         return (ur != null && ur.contains("vip.com"));
     }
+
+    /**
+     * 苏宁
+     * @param ur
+     * @return
+     */
+    public static boolean isSUNINGUrl(String ur) {
+        return (ur != null && ur.contains("suning.com"));
+    }
+
+    /**
+     * 国美
+     * @param ur
+     * @return
+     */
+    public static boolean isGMUrl(String ur) {
+        return (ur != null && ur.contains("gome.com"));
+    }
+
+    /**
+     * 拼多多
+     * @param ur
+     * @return
+     */
+    public static boolean isPDD(String ur) {
+        return (ur != null && ur.contains("yangkeduo.com"));
+    }
+
+
 
 
 }
