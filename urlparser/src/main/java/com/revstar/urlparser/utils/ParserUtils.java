@@ -1,5 +1,6 @@
 package com.revstar.urlparser.utils;
 
+import android.service.autofill.FieldClassification;
 import android.util.Log;
 import android.widget.Button;
 
@@ -9,14 +10,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.jsoup.select.Evaluator;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Create on 2019/8/22 15:04
@@ -50,32 +50,7 @@ public class ParserUtils {
         return urlList;
     }
 
-    /**
-     *淘宝
-     * @param html
-     * @return
-     */
 
-    public static ArrayList<String> parserMTAOBAOUrl(String html) {
-        ArrayList<String> urlList = new ArrayList<>();
-        try {
-            Document doc=   Jsoup.parse(html);
-            Elements swiper=doc.select("div.img-wrapper");
-            for (Element slide:swiper){
-                Elements src=slide.getElementsByTag("img");
-                for (Element srcUrl:src){
-                    String url=srcUrl.attr("src");
-                    if (url!=null&&!url.isEmpty()){
-                        urlList.add("https:"+url);
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return urlList;
-    }
 
     /**
      * 聚划算
@@ -229,7 +204,7 @@ public class ParserUtils {
             httpUrl= httpUrl.replace("https://m.vip.com/product","https://detail.vip.com/detail").replace("?source=www","");
 
             try {
-             Document doc=   Jsoup.connect(httpUrl).get();
+             Document doc=   Jsoup.connect(httpUrl).userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6").get();
                 Elements zoomPad=doc.select("div.pic-sliderwrap");
                 for (Element img:zoomPad){
                     Elements slide=img.getElementsByTag("img");
@@ -243,6 +218,67 @@ public class ParserUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        return urlList;
+    }
+
+    /**
+     * 新的方式获取淘宝
+     * @return
+     */
+    public static ArrayList<String> parserNEWMTAOBAOUrl(String httpUrl) {
+        ArrayList<String> urlList = new ArrayList<>();
+        if (httpUrl!=null){
+            httpUrl=httpUrl.replace("https://h5.m.taobao.com/awp/core/detail.htm","https://item.taobao.com/item.htm");
+            try {
+                Document doc=   Jsoup.connect(httpUrl).get();
+                String newText=doc.text();
+
+                String regex="auctionImages\\s*:\\s*.*";
+
+                Pattern p=Pattern.compile(regex);
+                Matcher m=p.matcher(newText);
+
+
+
+//                for (Element img:zoomPad){
+//                    Elements slide=img.getElementsByTag("img");
+//                    for (Element src:slide){
+//                        String url=src.attr("data-original");
+//                        if (url != null && !url.isEmpty()) {
+//                            urlList.add("https:"+ url);
+//                        }
+//                    }
+//                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return urlList;
+    }
+    /**
+     *淘宝
+     * @param html
+     * @return
+     */
+
+    public static ArrayList<String> parserMTAOBAOUrl(String html) {
+        ArrayList<String> urlList = new ArrayList<>();
+        try {
+            Document doc=   Jsoup.parse(html);
+            Elements swiper=doc.select("div.img-wrapper");
+            for (Element slide:swiper){
+                Elements src=slide.getElementsByTag("img");
+                for (Element srcUrl:src){
+                    String url=srcUrl.attr("src");
+                    if (url!=null&&!url.isEmpty()){
+                        urlList.add("https:"+url);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return urlList;
     }

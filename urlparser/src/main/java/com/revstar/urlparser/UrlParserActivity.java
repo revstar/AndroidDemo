@@ -40,7 +40,8 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
     private EditText etInputUrl;
     private Button btnSearch;
     private Vector<ArrayList<String> >mVector=new Vector<>();
-    private String url = "https://h5.m.taobao.com/?sprefer=sypc00";
+//    private String url = "https://h5.m.taobao.com/?sprefer=sypc00";
+    private String url = "https://h5.m.taobao.com/awp/core/detail.htm?id=546736650978&rmdChannelCode=goodShop&spm=a1z67.7917908.tuijian.sjsdd1";
 //    private String url = "https://m.vip.com/product-0-6918337434724607831.html?goodsId=6918337434724607831&brandId=1710613335&goodsType=0&tra_from=m%3Ai%3A1566464972441_65f77dd576d79e64379f411b92b5bd79%3Ac%3Anature%3Awxclick%3A&from=m&device=i&cid=1566464972441_65f77dd576d79e64379f411b92b5bd79&f=nature%3A0%3A&other=wxclick&mref=";
 //    private String url="https://detail.m.tmall.com/item.htm?id=566473612602&scm=1007.12144.135827.1720401_0_0&pvid=9d95e617-35bb-4d85-8900-6197f3ea5d81&utparam={%22x_hestia_source%22:%221720401%22,%22x_object_type%22:%22item%22,%22x_mt%22:8,%22x_src%22:%221720401%22,%22x_pos%22:6,%22x_pvid%22:%229d95e617-35bb-4d85-8900-6197f3ea5d81%22,%22x_object_id%22:566473612602}&spm=a211ue.11501597.new-recommend.7";
 //    private String url="https://ju.taobao.com/m/jusp/alone/detailwap/mtp.htm?item_id=593841462450&_force=wap&_target=_blank&spm=a2147.7632989.List.1&ju_id=10000320600379&item_id=593841462450&_format=true";
@@ -255,7 +256,7 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
                 }else if (NetUtils.isGMUrl(url)){
                     getUrlList(ParserUtils.parserGMHUrl(html));
                 }else if (NetUtils.isMTaobaoUrl(url)){
-                    getUrlList(ParserUtils.parserMTAOBAOUrl(html));
+                    getUrlList(ParserUtils.parserNEWMTAOBAOUrl(url));
                 }else if (NetUtils.isJUTaobaoUrl(url)){
                     getUrlList(ParserUtils.parserJUTAOBAOUrl(html));
                 }
