@@ -14,9 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ParserResultActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+          >
+
+        </activity>
         <activity
             android:name=".UrlParserActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

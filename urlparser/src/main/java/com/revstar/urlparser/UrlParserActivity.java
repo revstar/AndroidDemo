@@ -5,26 +5,34 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
 
+import android.view.inputmethod.EditorInfo;
+
+
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.revstar.urlparser.utils.KeybordUtil;
 import com.revstar.urlparser.utils.NetUtils;
 import com.revstar.urlparser.utils.ParserUtils;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -39,9 +47,9 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
     private ArrayList<String> urlList;
     private EditText etInputUrl;
     private Button btnSearch;
-    private Vector<ArrayList<String> >mVector=new Vector<>();
-//    private String url = "https://h5.m.taobao.com/?sprefer=sypc00";
-    private String url = "https://h5.m.taobao.com/awp/core/detail.htm?id=546736650978&rmdChannelCode=goodShop&spm=a1z67.7917908.tuijian.sjsdd1";
+    private Vector<ArrayList<String>> mVector = new Vector<>();
+    private String url = "https://h5.m.taobao.com/?sprefer=sypc00";
+//    private String url = "https://h5.m.taobao.com/awp/core/detail.htm?id=546736650978&rmdChannelCode=goodShop&spm=a1z67.7917908.tuijian.sjsdd1";
 //    private String url = "https://m.vip.com/product-0-6918337434724607831.html?goodsId=6918337434724607831&brandId=1710613335&goodsType=0&tra_from=m%3Ai%3A1566464972441_65f77dd576d79e64379f411b92b5bd79%3Ac%3Anature%3Awxclick%3A&from=m&device=i&cid=1566464972441_65f77dd576d79e64379f411b92b5bd79&f=nature%3A0%3A&other=wxclick&mref=";
 //    private String url="https://detail.m.tmall.com/item.htm?id=566473612602&scm=1007.12144.135827.1720401_0_0&pvid=9d95e617-35bb-4d85-8900-6197f3ea5d81&utparam={%22x_hestia_source%22:%221720401%22,%22x_object_type%22:%22item%22,%22x_mt%22:8,%22x_src%22:%221720401%22,%22x_pos%22:6,%22x_pvid%22:%229d95e617-35bb-4d85-8900-6197f3ea5d81%22,%22x_object_id%22:566473612602}&spm=a211ue.11501597.new-recommend.7";
 //    private String url="https://ju.taobao.com/m/jusp/alone/detailwap/mtp.htm?item_id=593841462450&_force=wap&_target=_blank&spm=a2147.7632989.List.1&ju_id=10000320600379&item_id=593841462450&_format=true";
@@ -103,6 +111,16 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
 
         mWebView.loadUrl(url);
 
+        etInputUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId== EditorInfo.IME_ACTION_SEARCH){
+                    search();
+                    return true;
+                }
+                return false;
+            }
+        });
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
@@ -111,12 +129,17 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
                     btnImport.setText("解析数据...");
                     btnImport.setClickable(false);
                 }
+                if (mVector != null) {
+                    mVector.clear();
+                }
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String s) {
                 return super.shouldOverrideUrlLoading(webView, s);
             }
+
+
 
             @Override
             public void onPageFinished(WebView webView, String s) {
@@ -141,6 +164,7 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
 
                 super.onPageFinished(webView, s);
             }
+
             @Override
             public void onReceivedError(WebView webView, int i, String s, String s1) {
                 super.onReceivedError(webView, i, s, s1);
@@ -183,6 +207,8 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void search() {
+
+
         if (etInputUrl != null) {
             String inputUrl = etInputUrl.getText().toString();
             if (TextUtils.isEmpty(inputUrl)) {
@@ -192,7 +218,11 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
             } else {
                 if (mWebView != null) {
                     this.url = inputUrl;
+                    if (!url.startsWith("http")){
+                        url="http://"+url;
+                    }
                     mWebView.loadUrl(url);
+                    KeybordUtil.closeKeybord(this);
                 }
             }
         }
@@ -211,80 +241,78 @@ public class UrlParserActivity extends AppCompatActivity implements View.OnClick
 
     public synchronized void importResult() {
 
-        int maxSize=0;
-        int maxIndex=0;
-        if(mVector!=null){
-            for (int i=0;i<mVector.size();i++){
-                if (mVector.get(i)!=null&&mVector.get(i).size()>=maxSize){
-                    maxSize=mVector.get(i).size();
-                    maxIndex=i;
+        int maxSize = 0;
+        int maxIndex = 0;
+        if (mVector != null) {
+            for (int i = 0; i < mVector.size(); i++) {
+                if (mVector.get(i) != null && mVector.get(i).size() >= maxSize) {
+                    maxSize = mVector.get(i).size();
+                    maxIndex = i;
                 }
             }
         }
 
-          if (maxSize == 0) {
-              Toast.makeText(this, "没有获取到图片结果", Toast.LENGTH_SHORT).show();
-              return;
-          }
-          if (urlList==null){
-              urlList=new ArrayList<>();
-          }
-          urlList.clear();
-          urlList.addAll(mVector.get(maxIndex));
+        if (maxSize == 0) {
+            Toast.makeText(this, "没有获取到图片结果", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (urlList == null) {
+            urlList = new ArrayList<>();
+        }
+        urlList.clear();
+        urlList.addAll(mVector.get(maxIndex));
 
-          Intent intent = new Intent(this, ParserResultActivity.class);
-          intent.putStringArrayListExtra("urlList", urlList);
-          startActivity(intent);
-      }
-
-
-    public synchronized  void parserHtml(final String html) {
-
-
-            try {
-
-                if (NetUtils.isTMUrl(url)) {
-                    getUrlList(ParserUtils.parserTMUrl(html));
-                } else if (NetUtils.isJDUrl(url)) {
-                    getUrlList(ParserUtils.parserJDUrl(html));
-                } else if (NetUtils.isWDUrl(url)) {
-                    getUrlList(ParserUtils.parserWDUrl(html));
-                } else if (NetUtils.isVIPUrl(url)) {
-                    getUrlList(ParserUtils.parserVIPHUrl(url));
-                }else if (NetUtils.isSUNINGUrl(url)){
-                    getUrlList(ParserUtils.parserSUNINGUrl(html));
-                }else if (NetUtils.isGMUrl(url)){
-                    getUrlList(ParserUtils.parserGMHUrl(html));
-                }else if (NetUtils.isMTaobaoUrl(url)){
-                    getUrlList(ParserUtils.parserNEWMTAOBAOUrl(url));
-                }else if (NetUtils.isJUTaobaoUrl(url)){
-                    getUrlList(ParserUtils.parserJUTAOBAOUrl(html));
-                }
-                else {
-                    getUrlList(ParserUtils.parserOtherUrl(html));
-                }
-
-                if (mMyHandler != null) {
-                    Message msg = new Message();
-                    msg.obj = "导入";
-                    mMyHandler.sendMessage(msg);
-                }
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                if (mMyHandler != null) {
-                    Message msg = new Message();
-                    msg.obj = "解析错误";
-                    mMyHandler.sendMessage(msg);
-                }
-            }
+        Intent intent = new Intent(this, ParserResultActivity.class);
+        intent.putStringArrayListExtra("urlList", urlList);
+        startActivity(intent);
     }
 
-    public    void getUrlList(ArrayList<String>list) {
+
+    public synchronized void parserHtml(final String html) {
+
+
+        try {
+
+            if (NetUtils.isTMUrl(url)) {
+                getUrlList(ParserUtils.parserTMUrl(html));
+            } else if (NetUtils.isJDUrl(url)) {
+                getUrlList(ParserUtils.parserJDUrl(html));
+            } else if (NetUtils.isWDUrl(url)) {
+                getUrlList(ParserUtils.parserWDUrl(html));
+            } else if (NetUtils.isVIPUrl(url)) {
+                getUrlList(ParserUtils.parserVIPHUrl(url));
+            } else if (NetUtils.isSUNINGUrl(url)) {
+                getUrlList(ParserUtils.parserSUNINGUrl(html));
+            } else if (NetUtils.isGMUrl(url)) {
+                getUrlList(ParserUtils.parserGMHUrl(html));
+            } else if (NetUtils.isMTaobaoUrl(url)) {
+                getUrlList(ParserUtils.parserNEWMTAOBAOUrl(url));
+            } else if (NetUtils.isJUTaobaoUrl(url)) {
+                getUrlList(ParserUtils.parserJUTAOBAOUrl(html));
+            } else {
+                getUrlList(ParserUtils.parserOtherUrl(html));
+            }
+
+            if (mMyHandler != null) {
+                Message msg = new Message();
+                msg.obj = "导入";
+                mMyHandler.sendMessage(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (mMyHandler != null) {
+                Message msg = new Message();
+                msg.obj = "解析错误";
+                mMyHandler.sendMessage(msg);
+            }
+        }
+    }
+
+    public void getUrlList(ArrayList<String> list) {
 
         try {
             mVector.add(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

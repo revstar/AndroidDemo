@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".UrlParserActivity">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -18,6 +17,7 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:singleLine="true"
+            android:imeOptions="actionSearch"
             />
         <Button
             android:id="@+id/btn_search"
@@ -27,12 +27,12 @@
             android:text="前往"
             />
     </LinearLayout>
-    <WebView
+    <com.tencent.smtt.sdk.WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10">
-    </WebView>
+    </com.tencent.smtt.sdk.WebView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
