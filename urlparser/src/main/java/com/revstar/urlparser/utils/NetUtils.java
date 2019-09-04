@@ -30,13 +30,13 @@ public class NetUtils {
     }
 
     /**
-     * 判断是否为淘宝页面
+     * 判断是否为普通淘宝页面
      *
      * @param url
      * @return
      */
     public static boolean isMTaobaoUrl(String url) {
-        return (url != null && url.contains("m.taobao.com"));
+        return (url != null && url.contains("h5.m.taobao.com/awp/core/detail.htm"));
     }
 
     /**
@@ -55,7 +55,7 @@ public class NetUtils {
      * @return
      */
     public static boolean isTMUrl(String ur) {
-        return (ur != null && ur.contains("tmall.com"));
+        return (ur != null && ur.contains("tmall"));
     }
 
 
