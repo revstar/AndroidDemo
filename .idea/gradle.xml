@@ -3,11 +3,15 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT" />
+        </compositeConfiguration>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/animation" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/clipview" />
             <option value="$PROJECT_DIR$/customview" />
@@ -16,10 +20,12 @@
             <option value="$PROJECT_DIR$/dispatchevent" />
             <option value="$PROJECT_DIR$/dragview" />
             <option value="$PROJECT_DIR$/path" />
+            <option value="$PROJECT_DIR$/urlparser" />
             <option value="$PROJECT_DIR$/volly" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuAnimatorActivity"
+    android:layout_marginBottom="10dp"
+    android:layout_marginEnd="10dp">
+
+    <Button
+        android:id="@+id/item_click"
+        style="@style/MenuStyle"
+        android:background="@drawable/item_click" />
+
+    <Button
+        android:id="@+id/item1"
+        style="@style/MEnuItemStyle"
+        android:visibility="gone"
+        android:background="@drawable/item1" />
+
+    <Button
+        android:id="@+id/item2"
+        style="@style/MEnuItemStyle"
+        android:visibility="gone"
+        android:background="@drawable/item2" />
+
+    <Button
+        android:id="@+id/item3"
+        style="@style/MEnuItemStyle"
+        android:visibility="gone"
+        android:background="@drawable/item3" />
+
+    <Button
+        android:id="@+id/item4"
+        style="@style/MEnuItemStyle"
+        android:visibility="gone"
+        android:background="@drawable/item4" />
+
+    <Button
+        android:id="@+id/item5"
+        style="@style/MEnuItemStyle"
+        android:visibility="gone"
+        android:background="@drawable/item5" />
+</FrameLayout>
