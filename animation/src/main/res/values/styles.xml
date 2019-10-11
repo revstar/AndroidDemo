@@ -10,7 +10,7 @@
     <style name="MenuStyle">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:layout_gravity">top|bottom</item>
+        <item name="android:layout_gravity">right|bottom</item>
     </style>
 
     <style name="MEnuItemStyle">
